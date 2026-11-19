@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-web
+  namespace: lab-apps
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab-web
+  template:
+    metadata:
+      labels:
+        app: lab-web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab-web
+  namespace: lab-apps
+spec:
+  type: ClusterIP
+  selector:
+    app: lab-web
+  ports:
+    - port: 80
+      targetPort: 80
