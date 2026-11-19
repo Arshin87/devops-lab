@@ -9,3 +9,8 @@ resources:
 replicas:
   - name: lab-kustomize-web
     count: 1
+
+images:
+  - name: nginx
+    newName: ghcr.io/arshin87/devops-lab-web
+    newTag: sha-ccd6510ebabf4dbe104fe6eed5138cbadc7bb9d8
