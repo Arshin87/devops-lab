@@ -13,4 +13,4 @@ replicas:
 images:
   - name: nginx
     newName: ghcr.io/arshin87/devops-lab-web
-    newTag: sha-ccd6510ebabf4dbe104fe6eed5138cbadc7bb9d8
+    newTag: sha-725bb32d143d59098e7ef7e577c29c6431a39ebf
