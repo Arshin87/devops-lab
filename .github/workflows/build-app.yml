@@ -37,6 +37,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
+      
         uses: docker/build-push-action@v7
         with:
           context: ./app
@@ -44,3 +45,29 @@ jobs:
           tags: ${{ steps.vars.outputs.image }}:sha-${{ github.sha }}
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
+
+      - name: Update development image tag in Git
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FILE="k8s/kustomize/overlays/dev/kustomization.yaml"
+
+          # Kontrollera att vår image-override finns
+          grep -q "newTag:" "$FILE"
+
+          # Sätt den nya image-versionen
+          sed -i -E \
+            "s|^([[:space:]]*newTag:).*|\1 sha-${GITHUB_SHA}|" \
+            "$FILE"
+
+          # Commit bara om filen faktiskt ändrats
+          if ! git diff --quiet -- "$FILE"; then
+            git config user.name "github-actions[bot]"
+            git config user.email \
+              "41898282+github-actions[bot]@users.noreply.github.com"
+
+            git add "$FILE"
+            git commit -m "Update DEV image to ${GITHUB_SHA:0:7}"
+            git push origin HEAD:main
+          fi
