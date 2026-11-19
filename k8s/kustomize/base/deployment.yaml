@@ -1,0 +1,20 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-kustomize-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab-kustomize-web
+  template:
+    metadata:
+      labels:
+        app: lab-kustomize-web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80
